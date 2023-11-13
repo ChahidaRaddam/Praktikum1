@@ -1,0 +1,5 @@
+Daten des Burgeramts
+Name des Burgeramts: 		chahd
+Offnungszeit des Burgeramts: 	12.0 - 45.0
+Strasse ind hausnummer des Burgeramts: 45
+Dienstleistungen des Burgeramts:	[Ljava.lang.String;@5231238f
