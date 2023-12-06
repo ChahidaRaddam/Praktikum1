@@ -1,25 +1,36 @@
-package gui;
-   
+package gui.buergeramter;
+
 import business.Buergeramt;
-import javafx.event.*;
+import business.BuergeraemterModel;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import ownUtil.*;
+import ownUtil.MeldungsfensterAnzeiger;
 
-public class BuergeraemterAnwendersystem {
-	  
-    //---Anfang Attribute der grafischen Oberflaeche---
+public class BuergeraemterView {
+	
+	private BuergeraemetControl bControl;
+	private BuergeraemterModel bModel;
+
+	  //---Anfang Attribute der grafischen Oberflaeche---
     private Pane pane     					= new  Pane();
     private Label lblEingabe    	 		= new Label("Eingabe");
     private Label lblAnzeige   	 	    	= new Label("Anzeige");
     private Label lblName 					= new Label("Name:");
-    private Label lblGeoeffnetVon   		= new Label("Geöffnet von:");
-    private Label lblGeoeffnetBis  	 		= new Label("Geöffnet bis:");
-    private Label lblStrasseHNr   			= new Label("Straße und Hausnummer:");
+    private Label lblGeoeffnetVon   		= new Label("Geï¿½ffnet von:");
+    private Label lblGeoeffnetBis  	 		= new Label("Geï¿½ffnet bis:");
+    private Label lblStrasseHNr   			= new Label("Straï¿½e und Hausnummer:");
     private Label lblDienstleistungen  		= new Label("Dienstleistungen:");
     private TextField txtName 	 			= new TextField();
     private TextField txtGeoeffnetVon		= new TextField();
@@ -35,17 +46,18 @@ public class BuergeraemterAnwendersystem {
     private MenuItem mnItmTxtExport 		= new MenuItem("txt-Export");
     //-------Ende Attribute der grafischen Oberflaeche-------
     
-    // speichert temporaer ein Objekt vom Typ Buergeramt
-    private Buergeramt buergeramt;
-    
-    public BuergeraemterAnwendersystem(Stage primaryStage){
+ 
+    public BuergeraemterView(BuergeraemetControl bControl,Stage primaryStage,BuergeraemterModel bModel){
     	Scene scene = new Scene(this.pane, 700, 340);
     	primaryStage.setScene(scene);
-    	primaryStage.setTitle("Verwaltung von Bürgerämtern");
+    	primaryStage.setTitle("Verwaltung von Bï¿½rgerï¿½mtern");
     	primaryStage.show();
     	this.initKomponenten();
 		this.initListener();
+		this.bControl = bControl;
+		this.bModel = bModel;
     }
+    
     
     private void initKomponenten(){
        	// Labels
@@ -114,6 +126,10 @@ public class BuergeraemterAnwendersystem {
  	    pane.getChildren().add(mnbrMenuLeiste);
    }
    
+    private void schreibeBuergeraemterInDatei(String typ) {
+    	bControl.schreibeBuergeraemterInDatei(typ);
+    }
+    
    private void initListener() {
 	    btnEingabe.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -127,34 +143,51 @@ public class BuergeraemterAnwendersystem {
 	            zeigeBuergeraemterAn();
 	        } 
    	    });  
+	    
+	    mnItmCsvExport.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				schreibeBuergeraemterInDatei("csv");
+			}
+	    });
+	    
+	    mnItmTxtExport.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				schreibeBuergeraemterInDatei("txt");
+			}
+	    	
+	    });
     }
     
     private void nehmeBuergeramtAuf(){
     	try{
-    		this.buergeramt = new Buergeramt(
-    			txtName.getText(), 
-   	            Float.parseFloat(txtGeoeffnetVon.getText()),
-   	            Float.parseFloat(txtGeoeffnetBis.getText()),
-    		    txtStrasseHNr.getText(),
-    		    txtDienstleistungen.getText().split(";"));
-    		zeigeInformationsfensterAn("Das Bürgeramt wurde aufgenommen!");
-       	}
-       	catch(Exception exc){
+    		bModel.setBuergeramt(new Buergeramt(txtName.getText(), 
+       	            Float.parseFloat(txtGeoeffnetVon.getText()),
+       	            Float.parseFloat(txtGeoeffnetBis.getText()),
+        		    txtStrasseHNr.getText(),
+        		    txtDienstleistungen.getText().split(";")));
+    		
+    		zeigeInformationsfensterAn("Das Bï¿½rgeramt wurde aufgenommen!");
+       	}       	catch(Exception exc){
+       		exc.printStackTrace();
        		zeigeFehlermeldungsfensterAn(exc.getMessage());
      	}
     }
    
-    private void zeigeBuergeraemterAn(){
-    	if(this.buergeramt != null){
+    public void zeigeBuergeraemterAn(){
+    	if(bModel.getBuergeramt() != null){
     		txtAnzeige.setText(
-    			this.buergeramt.gibBuergeramtZurueck(' '));
+    			bModel.getBuergeramt().gibBuergeramtZurueck(' '));
     	}
     	else{
-    		zeigeInformationsfensterAn("Bisher wurde kein Bürgeramt aufgenommen!");
+    		zeigeInformationsfensterAn("Bisher wurde kein Bï¿½rgeramt aufgenommen!");
     	}
     }	
 
-    private void zeigeInformationsfensterAn(String meldung){
+     void zeigeInformationsfensterAn(String meldung){
     	new MeldungsfensterAnzeiger(AlertType.INFORMATION,
     		"Information", meldung).zeigeMeldungsfensterAn();
     }	
