@@ -13,6 +13,7 @@ public class Main extends Application {
 		new BuergeraemetControl(primaryStage);
 		Stage stEinrichtungStage = new Stage();
 		new StaedtischeEinrichtungenControl(stEinrichtungStage);
+		//kommentar 
 		}
 
 	public static void main(String[] args){
