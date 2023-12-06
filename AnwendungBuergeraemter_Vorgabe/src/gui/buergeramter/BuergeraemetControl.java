@@ -4,19 +4,16 @@ import java.io.IOException;
 
 import business.BuergeraemterModel;
 import javafx.stage.Stage;
-import ownUtil.Observer;
 
-public class BuergeraemetControl implements Observer {
+public class BuergeraemetControl {
 	
 	private BuergeraemterView buergeraemterView;
 	private BuergeraemterModel buergeraemterModel;
 
  
     public BuergeraemetControl(Stage primaryStage){
-    	this.buergeraemterModel = BuergeraemterModel.getInstance();
+    	this.buergeraemterModel = new BuergeraemterModel();
     	this.buergeraemterView = new BuergeraemterView(this, primaryStage,buergeraemterModel);
-		buergeraemterModel.addObserver(this); 
-
     	}
 	
 	public void schreibeBuergeraemterInDatei(String typ) {
@@ -42,9 +39,5 @@ public class BuergeraemetControl implements Observer {
 		}
 	}
 
-	@Override
-	public void update() {
-		buergeraemterView.zeigeBuergeraemterAn();
-	}
 
 }
