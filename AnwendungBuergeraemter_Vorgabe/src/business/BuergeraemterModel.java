@@ -1,6 +1,7 @@
 package business;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import ownUtil.*;
@@ -9,8 +10,9 @@ import fabrik.*;
 public class BuergeraemterModel implements Observable{
 	
 	LinkedList<Observer> liste = new LinkedList<Observer>();
-
-	private Buergeramt buergeramt;
+	ArrayList<Buergeramt> buergeramtList = new ArrayList<>();
+	
+	//private Buergeramt buergeramt;
 	
 	private static BuergeraemterModel instance = null;
 	
@@ -24,13 +26,13 @@ public class BuergeraemterModel implements Observable{
 		return instance;
 	}
 	
-	public Buergeramt getBuergeramt() {
-		return buergeramt;
+	public ArrayList<Buergeramt> getBuergeramtList() {
+		return this.buergeramtList;
 	}
 
 
-	public void setBuergeramt(Buergeramt buergeramt) {
-		this.buergeramt = buergeramt;
+	public void addBuergeramt(Buergeramt buergeramt) {
+		this.buergeramtList.add(buergeramt);
 		notifyObservers();
 	}
 
@@ -40,8 +42,9 @@ public class BuergeraemterModel implements Observable{
 		Creator cr = new ConcreteCreator();
 		Product writer = cr.factoryMethod();
 	
-		
-		writer.fuegeInDateiHinzu(this.buergeramt);
+		for(Buergeramt ba : this.buergeramtList) {
+		writer.fuegeInDateiHinzu(ba);
+		}
 		writer.schliesseDatei();
 		
 		}
@@ -50,8 +53,9 @@ public class BuergeraemterModel implements Observable{
 	Creator cr = new ConcreteTxtCreator();
 	Product writer = cr.factoryMethod();
 
-	
-	writer.fuegeInDateiHinzu(this.buergeramt);
+	for(Buergeramt ba : this.buergeramtList) {
+	writer.fuegeInDateiHinzu(ba);
+	}
 	writer.schliesseDatei();
 	
 }
