@@ -12,6 +12,7 @@ public class Buergeramt {
     // Strasse und Hausnummer des Buergeramtes
     private String strasseHNr;
     // Dienstleistungen des Buergeramtes
+    
     private ArrayList<String> dienstleistungen = new ArrayList<>();
 
     public Buergeramt(String name, float geoeffnetVon, float geoeffnetBis,
